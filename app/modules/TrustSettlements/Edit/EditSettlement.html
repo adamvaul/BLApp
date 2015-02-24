@@ -1,0 +1,419 @@
+<div class="viewTop">
+    <div>
+        <h2>Edit</h2>
+    </div>
+    <div class="fileHeader">
+        <table>
+            <tr>
+                <td><span><strong>Dec.:</strong> {{ getDecedentFullName(Settlement) }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td><span><strong>DOD:</strong> {{ Settlement.DateOfDeath | date }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td><span><strong>File:</strong> {{ Settlement.FileName }}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <select class="form-control" style="display: inline-block; width: 350px; margin-top: -3px;" ng-change="settlementChanged()" ng-model="Settlement" ng-options="s.FileDescription for s in Settlements">
+            <option style="display:none" value="">{{settlementEmptyOption}}</option>
+        </select>
+    </div>
+    <div>
+        <button ng-click="saveSettlement()" class="btn btn-primary">Save</button>
+    </div>
+    <hr class="thin">
+</div>
+
+<div class="viewMain" ng-show="hasSettlement">
+    <form class="form-horizontal">
+        <fieldset>
+            <!-- Form Name -->
+            <!--            <legend>Edit Trust Settlement</legend>-->
+
+
+            <!--            Testing Datepickers-->
+            <!--
+            <div class="form-group">
+                <label class="col-md-4 control-label">My Date (Test):</label>
+                <div class="col-md-4">
+                    <input type="text" datepicker-popup class="form-control input-md" ng-model="myDate" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-md-4 control-label">My Date (Test):</label>
+                <div class="col-md-4">
+                    <input type="text" ui-date="{changeYear: true, changeMonth: true, yearRange: '1900:-0'}" class="form-control input-md" ng-model="myDate" />
+                </div>
+            </div>
+            
+            { myDate }
+-->
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">TS Number:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.FileName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Archive:</label>
+                <div class="col-md-4">
+                    <input type="checkbox" style="margin: 5px;" ng-model="Settlement.IsArchived" />
+                </div>
+            </div>
+
+            <hr>
+            <h4>File Info:</h4>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Date Retained:</label>
+                <div class="col-md-4">
+                    <input type="text" ui-date="uiDateOptions" class="form-control input-md" ng-model="Settlement._DateRetained" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Due Date:</label>
+                <div class="col-md-4">
+                    <input type="text" ui-date="uiDateOptions" class="form-control input-md" ng-model="Settlement._DueDate" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Total Fee:</label>
+                <div class="col-md-4">
+                    <input angular-currency-input type="text" class="form-control input-md" ng-model="Settlement.TotalFee"></input>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Retainer Amount:</label>
+                <div class="col-md-4">
+                    <input angular-currency-input type="text" class="form-control input-md" ng-model="Settlement.RetainerAmount"></input>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Retainer Received:</label>
+                <div class="col-md-4">
+                    <input type="text" ui-date="uiDateOptions" class="form-control input-md" ng-model="Settlement._RetainerReceived" />
+                </div>
+            </div>
+
+            <hr>
+            <h4>Decedent/Conservatee/Minor Info:</h4>
+            <div class="form-group">
+                <label class="col-md-4 control-label">First Name:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.DecedentFirstName" ng-required="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Middle Name:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.DecedentMiddleName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Last Name:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.DecedentLastName" ng-required="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Date of Death:</label>
+                <div class="col-md-4">
+                    <!--                    <input type="text" datepicker-popup class="form-control" ng-model="Settlement._DateOfDeath" ng-required="true" />-->
+                    <input type="text" ui-date="uiDateOptions" class="form-control input-md" ng-model="Settlement._DateOfDeath" />
+                    <!--                    <input type="text" datepicker-popup class="form-control input-md" ng-model="Settlement._DateOfDeath" />-->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Death Cert. Name:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.DeathCertName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">County of Residence on Death Cert.:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.County">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Place of Death County:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.PlaceOfDeathCounty">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Place of Death State:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.PlaceOfDeathState">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">SSN:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.DecedentSSN">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Birthdate:</label>
+                <div class="col-md-4">
+                    <input type="text" ui-date="{changeYear: true, changeMonth: true, yearRange: '1900:-0'}" class="form-control input-md" ng-model="Settlement._Birthdate" />
+                    <!--                    <input type="text" datepicker-popup class="form-control input-md" ng-model="Settlement._Birthdate" />-->
+                </div>
+            </div>
+            <!--
+            <div class="form-group">
+                <div class="col-md-4">
+                    <button ng-click="saveSettlement()" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+-->
+            <hr>
+            <h4>First Death Info:</h4>
+            <div class="form-group">
+                <label class="col-md-4 control-label">First Death Name:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.FirstDeathName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">First Death Date of Death:</label>
+                <div class="col-md-4">
+                    <input type="text" ui-date="uiDateOptions" class="form-control input-md" ng-model="Settlement._FirstDeathDOD" />
+                </div>
+            </div>
+
+
+            <hr>
+            <h4>Trustors: <i ng-click="addTrustor()" title="Add Trustor" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-grid="trustorGridOptions" class="gridWidth gridStyle" style="height: 150px;"></div>
+
+
+            <hr>
+            <h4>Clients/Trustees: <i ng-click="addClient()" title="Add Client" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-grid="clientGridOptions" class="gridWidth gridStyle" style="height: 150px;"></div>
+            <!--
+            <div class="form-group">
+                <div class="col-md-4">
+                    <button ng-click="saveSettlement()" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+-->
+
+
+            <hr>
+            <h4>Beneficiaries/Interested Parties: <i ng-click="addHeir()" title="Add Heir" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-grid="heirGridOptions" class="gridWidth gridStyle"></div>
+            <!--
+            <div class="form-group">
+                <div class="col-md-4">
+                    <button ng-click="saveSettlement()" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+-->
+
+
+            <hr>
+            <h4>Trust Info:</h4>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Trust Name:</label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-md" ng-model="Settlement.TrustName">
+                        <span class="input-group-addon">Trust</span>
+                    </div>
+
+                    <!--                    <input type="text" class="form-control input-md" ng-model="Settlement.TrustName">-->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Date of Trust:</label>
+                <div class="col-md-4">
+                    <input type="text" ui-date="uiDateOptions" class="form-control input-md" ng-model="Settlement._DateOfTrust" />
+                    <!--                    <input type="text" datepicker-popup class="form-control input-md" ng-model="Settlement._DateOfTrust" />-->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Date of Execution (if different):</label>
+                <div class="col-md-4">
+                    <input type="text" ui-date="uiDateOptions" class="form-control input-md" ng-model="Settlement._DateOfTrustExecution" />
+                    <!--                    <input type="text" datepicker-popup class="form-control input-md" ng-model="Settlement._DateOfTrustExecution" />-->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Date of Restatement (if any):</label>
+                <div class="col-md-4">
+                    <input type="text" ui-date="uiDateOptions" class="form-control input-md" ng-model="Settlement._DateOfTrustRestatement" />
+                    <!--                    <input type="text" datepicker-popup class="form-control input-md" ng-model="Settlement._DateOfTrustRestatement" />-->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Trust Type:</label>
+                <div class="col-md-4">
+                    <select class="form-control" style="display: inline-block; width: 350px; margin-top: -3px;" ng-model="Settlement.TrustTypeID" ng-options="i.TrustTypeID as i.Name for i in data.TrustTypes">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Trust/Trust A EIN:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.TrustEIN">
+                </div>
+            </div>
+            <div class="form-group" ng-show="Settlement.TrustTypeID > 2">
+                <label class="col-md-4 control-label">Trust B EIN:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.TrustBEIN">
+                </div>
+            </div>
+            <div class="form-group" ng-show="Settlement.TrustTypeID === 4">
+                <label class="col-md-4 control-label">Trust C EIN:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.TrustCEIN">
+                </div>
+            </div>
+
+            <hr>
+            <h4>Petition / Probate:</h4>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Case Name:</label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon">In re / Estate of</span>
+                        <input type="text" class="form-control input-md" ng-model="Settlement.P15409CaseName">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Case Number:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.P15409CaseNumber">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Hearing Date:</label>
+                <div class="col-md-4">
+                    <input type="text" ui-date="uiDateOptions" class="form-control input-md" ng-model="Settlement._P15409HearingDate" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Hearing Time:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.P15409HearingTime">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Hearing Dept:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.P15409HearingDept">
+                </div>
+            </div>
+            <!--
+            <div class="form-group">
+                <label class="col-md-4 control-label">Courthouse Name:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.P15409CourthouseName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Courthouse Address:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.P15409CourthouseAddress">
+                </div>
+            </div>
+-->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Courthouse:</label>
+                <div class="col-md-4">
+                    <select class="form-control" ng-change="courthouseChanged()" ng-model="SelectedCourthouse" ng-options="c.ShortName for c in Courthouses">
+                        <option style="display:none" value=""></option>
+                    </select>
+                </div>
+            </div>
+            <!--
+            <div class="form-group">
+                <div class="col-md-4">
+                    <button ng-click="saveSettlement()" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+-->
+
+            <hr>
+            <h4>LBT Trust Info:</h4>
+            <div class="form-group">
+                <label class="col-md-4 control-label">LBT Trust File Name:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.LBTTrustFileName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">LBT Trustee Name:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.LBTTrusteeName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">LBT Beneficiary Name:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.LBTBeneficiaryName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">LBT Trust EIN:</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="Settlement.LBTTrustsEIN">
+                </div>
+            </div>
+            <!--
+            <div class="form-group">
+                <div class="col-md-4">
+                    <button ng-click="saveSettlement()" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+-->
+
+
+            <hr>
+            <h4>Preparer Info:</h4>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Preparer:</label>
+                <div class="col-md-4">
+                    <select class="form-control" ng-model="selectedPreparer" ng-options="p.FullName for p in Preparers"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Attorney:</label>
+                <div class="col-md-4">
+                    <select class="form-control" ng-model="selectedAttorney" ng-options="p.FullName for p in Attorneys"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Notary:</label>
+                <div class="col-md-4">
+                    <select class="form-control" ng-model="selectedNotary" ng-options="p.FullName for p in Notaries"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Paralegal/Declarant:</label>
+                <div class="col-md-4">
+                    <select class="form-control" ng-model="selectedParalegal" ng-options="p.FullName for p in Paralegals"></select>
+                </div>
+            </div>
+            <!--
+            <div class="form-group">
+                <div class="col-md-4">
+                    <button ng-click="saveSettlement()" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+-->
+
+        </fieldset>
+    </form>
+</div>

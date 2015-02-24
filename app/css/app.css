@@ -1,0 +1,299 @@
+/* app css stylesheet */
+
+hr {
+    margin: 10px 0px;
+}
+hr.thin {
+    margin: 5px 0px;
+    clear: both;
+}
+.menu {
+    list-style: none;
+    border-bottom: 0.1em solid black;
+    margin-bottom: 2em;
+    padding: 0 0 0.5em;
+}
+/*
+.menu:before {
+    content: "[";
+}
+.menu:after {
+    content: "]";
+}
+*/
+
+/*for status indications*/
+.red {
+    background-color: rgb(240, 104, 72);
+}
+.green {
+    background-color: rgb(63, 183, 27);
+}
+
+.busyIndicator {
+    position: fixed;
+    top: 40%;
+    left: 40%;
+    color: red;
+    font-size: 24px;
+    z-index: 10000;
+}
+.ngGrid div.right {
+    text-align: right;
+}
+.menu > li {
+    display: inline;
+    vertical-align: bottom;
+}
+.menu > li:before {
+    content: "|";
+    padding-right: 0.3em;
+}
+.menu > li:nth-child(1):before {
+    content: "";
+    padding: 0;
+}
+.link {
+    color: purple;
+    cursor: pointer;
+}
+/* Wrapper for page content to push down footer */
+
+/* Set the fixed height of the footer here */
+
+.container {
+    margin-left: 10px;
+}
+#wrap {
+    margin-top: 30px;
+}
+.sublinknav {
+    position: fixed;
+    top: 35px;
+    padding-left: 10px;
+    width: 100%;
+    background: white;
+    z-index: 100;
+}
+.viewRegion {
+    margin-left: 15px;
+    margin-top: 45px;
+}
+.viewTop {
+    position: fixed;
+    top: 70px;
+    padding-top: 5px;
+    width: 100%;
+    background: white;
+    z-index: 100;
+    display: inline-block;
+}
+.viewTop > div > h2 {
+    margin-bottom: 0px;
+}
+.viewTop > div {
+    float: left;
+    padding-left: 5px;
+    padding-bottom: 2px;
+}
+.viewTop > div > select {
+    display: inline-block;
+    width: 350px;
+    margin-bottom: 1px;
+    margin-top: -3px;
+}
+.viewTop > .fileHeader{
+    margin: 0px 5px;
+}
+.viewMain {
+    margin-top: 182px;
+    margin-bottom: 150px;
+}
+#footer {
+    position: fixed;
+    bottom: 0px;
+    height: 35px;
+    width: 100%;
+    background-color: #efefef;
+    z-index: 10000;
+    text-align: center;
+}
+alert {
+    height: 10px;
+    max-height: 5px;
+}
+/*ngGrid struff*/
+
+.ngPinnedIcon, .ngUnPinnedIcon{
+    display: none;
+}
+.gridWidth {
+    /*    width: 1270px;*/
+    width: 98%;
+}
+.gridStyle {
+    border: 1px solid rgb(212, 212, 212);
+    height: 200px;
+    margin-bottom: 10px;
+}
+.gridToolbar {
+    height: 25px;
+}
+.gridToolbarInner {
+    margin-left: 4px;
+    margin-right: 4px;
+    /*    float: right;*/
+}
+.ngCellDateInput {
+    height: 30px;
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: right;
+    padding-right: 5px;
+}
+.ngCellElement > select {
+  width: 100%;
+  height: 34px;
+  color: #555;
+  border: 1px solid #ccc;
+  margin-top: -3px; 
+  background: transparent;
+}
+.ngCellText > a {
+    margin: 0px 2px;
+}
+.ngAggregateText{
+    font-weight: bold;
+}
+/*For sublinks*/
+
+a.active {
+    font-weight: bold;
+}
+/*Bootstrap Override*/
+
+@media (min-width: 1200px) {
+    .container {
+        width: 98%;
+    }
+}
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+.container {
+    margin: 0px;
+}
+.tab {
+    padding-left: 22px;
+}
+.navbar-brand {
+    /*  height: 50px;*/
+    /*  padding: 15px 15px;*/
+    height: 38px;
+    padding: 10px 10px 5px 0px;
+    margin-right: 10px;
+}
+.navbar-nav li {
+    font-size: 0px;
+    margin-right: 5px;
+}
+.navbar-nav li:first-child {
+    margin-left: -5px;
+}
+.navbar-nav li > * {
+    font-size: 14px;
+}
+.navbar-nav li > a {
+    display: inline-block;
+}
+.navbar-nav li > a.pre-mini {
+    padding-right: 4px;
+}
+.navbar-nav li > a.mini {
+    padding-left: 3px;
+    padding-right: 6px;
+}
+.navbar {
+    margin-bottom: 0px;
+    min-height: 0px;
+}
+.nav > li > a {
+    padding: 10px 10px 8px 5px;
+}
+.form-control-inline {
+    /*  display: inline-block;*/
+    /*  width: 100%;*/
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+div.myRow > div {
+    display: inline-block;
+}
+.control-label-inline {
+    float: left;
+    margin-right: 5px
+}
+.alert {
+    height: 26px;
+    padding: 3px 0px 0px 0px;
+    margin: 5px 0px 10px 0px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-align: center;
+}
+.alert-success {
+    color: #3c763d;
+    background-color: #8be56b;
+    border-color: #d6e9c6;
+}
+.alert-warning {
+    color: #796248;
+    background-color: #fdfa6f;
+    border-color: #e3d9c8;
+}
+/*
+.alert-warning hr {
+  border-top-color: #f7e1b5;
+}
+.alert-warning .alert-link {
+  color: #66512c;
+}
+.alert-danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}*/
+
+.ui-datepicker {
+    z-index: 1001 !important;
+}
+.currencyInput {
+    border-width: 0px;
+    width: 50%;
+    height: 24px;
+    background: transparent;
+}

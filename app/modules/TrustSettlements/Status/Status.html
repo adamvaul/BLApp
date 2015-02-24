@@ -1,0 +1,64 @@
+<div class="viewTop">
+    <div>
+        <h2>Status</h2>
+    </div>
+    <div class="fileHeader">
+        <table>
+            <tr>
+                <td><span><strong>Dec.:</strong> {{ getDecedentFullName(Settlement) }}</span>
+                </td>
+                <td>&nbsp;</td>
+                <td><span><strong>Total Estate:</strong> {{assetsInfo.totalEstate | currency}} (Trust A: {{assetsInfo.trustATotal | currency}}, <span ng-show="Settlement.TrustTypeID > 2">Trust B: {{assetsInfo.trustBTotal | currency}}, </span><span ng-show="Settlement.TrustTypeID == 4">Trust C: {{assetsInfo.trustCTotal | currency}}, </span>Other: {{assetsInfo.otherTotal | currency}})</span>
+                </td>
+            </tr>
+            <tr>
+                <td><span><strong>DOD:</strong> {{ Settlement.DateOfDeath | date }}</span>
+                </td>
+                <td>&nbsp;</td>
+                <td><span><strong>Estm. Value:</strong> {{assetsInfo.estimatedValue | currency}} (Trust A: {{assetsInfo.estimatedTrustATotal | currency}}, <span ng-show="Settlement.TrustTypeID > 2">Trust B: {{assetsInfo.estimatedTrustBTotal | currency}}, </span><span ng-show="Settlement.TrustTypeID == 4">Trust C: {{assetsInfo.estimatedTrustCTotal | currency}}, </span>Other: {{assetsInfo.estimatedOtherTotal | currency}})</span>
+                </td>
+            </tr>
+            <tr>
+                <td><span><strong>File:</strong> {{ Settlement.FileName }}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <select class="form-control" ng-change="settlementChanged()" ng-model="SelectedSettlement" ng-options="s.FileDescription for s in Settlements">
+            <option style="display:none" value="">{{settlementEmptyOption}}</option>
+        </select>
+    </div>
+    <div>
+        <button ng-click="saveClick()" class="btn btn-primary">Save</button>
+    </div>
+    <hr class="thin">
+</div>
+
+
+<div class="viewMain" style="margin-top: 150px;" ng-show="hasSettlement">
+
+    <!--    {{data.OwnerTypes}}-->
+    <h4>To Do: <i ng-click="addToDo()" title="Add Item" class="link glyphicon glyphicon-plus"></i></h4>
+    <div style="height: 150px;" ng-grid="ToDoGridOptions" class="gridWidth gridStyle"></div>
+
+    <h4>Assets:</h4>
+    <div style="height: 500px;" ng-grid="assetGridOptions" class="gridWidth gridStyle"></div>
+
+
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-md-4 control-label">Inventory Notes:</label>
+            <div class="col-md-4">
+                <textarea class="form-control input-md" ng-model="Settlement.InventoryNotes"></textarea>
+            </div>
+        </div>
+    </form>
+
+    <div>
+        <button ng-click="getInventory()" class="btn btn-primary">Get Inventory</button>
+    </div>
+
+</div>
+
+<!--{{data.Properties}}-->

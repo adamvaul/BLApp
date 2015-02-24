@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="myApp" class="no-js">
+<!--<![endif]-->
+
+<head>
+    <link rel="icon" type="image/png" href="/img/favicon.ico" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BL Application</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <!--    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.css" />-->
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/all.css" />
+    <link rel="stylesheet" href="css/ng-grid.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <!--    <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>-->
+</head>
+
+<body ng-controller="AppController">
+
+    <!-- Static navbar -->
+    <div style="padding-left: 10px;" class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Bezaire & Leathers</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown" ng-repeat="link in links" ng-class="{active: link.isActive}">
+                        <a class="pre-mini" ng-href="{{link.href}}">{{link.text}}</a>
+                        <a href="#" class="dropdown-toggle mini" data-toggle="dropdown"><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown" ng-repeat="sublink in link.sublinks">
+                                <a ng-href="{{sublink.href}}" ng-class="{active: sublink.isActive}">{{sublink.text}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!--
+    <div ng-repeat="sublink in sublinks">
+        <div ng-hide="{{sublink.isHidden}}">{{sublink.text}}</div>
+    </div>
+    
+    <div>{{sublinks}}</div>
+-->
+
+    <div id="wrap">
+        <div class="sublinknav">
+            <div class="navbar">
+                <ul class="nav navbar-nav">
+                    <li ng-repeat="sublink in sublinks">
+                        <a style="height: 30px;" ng-class="{active: sublink.isActive}" ng-href="{{sublink.href}}">{{sublink.text}}</a>
+                    </li>
+                </ul>
+            </div>
+            <hr style="margin: 2px 0px;">
+        </div>
+        <div>
+            <div class="busyIndicator" ng-show="showTheBusyIndicator">Loading...</div>
+            <div class="viewRegion" ng-view></div>
+        </div>
+    </div>
+
+
+
+    <div id="footer" ng-show="alerts.length > 0">
+        <div class="container">
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert(alert)">{{alert.msg}}</alert>
+        </div>
+    </div>
+
+    <!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <!--    <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>-->
+    <script src="bower_components/jquery-ui/ui/core.js"></script>
+    <script src="bower_components/jquery-ui/ui/datepicker.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <!--    <script src="bower_components/angular-datepicker/dist/index.js"></script>-->
+    <script src="bower_components/ng-grid/ng-grid-2.0.13.debug.js"></script>
+    <script src="js/ngGridFlexibleHeightPlugin.js"></script>
+    <!--    <script src="bower_components/angular-ui-date/src/date.js"></script>-->
+    <script src="bower_components/angular-ui-date/src/date.js"></script>
+    <script src="js/angular-currency-input.js"></script>
+    <!--    <script src="bower_components/angular-dialog-service/dialogs.js"></script>-->
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/lodash/dist/lodash.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/directives.js"></script>
+    <script src="modules/TrustSettlements/Clients/TSClients.js"></script>
+    <script src="modules/TrustSettlements/Edit/EditSettlement.js"></script>
+    <script src="modules/TrustSettlements/Documents/TSDocuments.js"></script>
+    <script src="modules/TrustSettlements/EditAssets/EditTSAssets.js"></script>
+    <script src="modules/TrustSettlements/AllStatus/AllStatus.js"></script>
+    <script src="modules/TrustSettlements/Status/Status.js"></script>
+    <script src="modules/WillsTrusts/Clients/WTClients.js"></script>
+
+
+</body>
+
+</html>

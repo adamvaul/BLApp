@@ -1,0 +1,95 @@
+<div class="viewTop">
+    <div>
+        <h2>Trust Settlements</h2>
+    </div>
+    <hr class="thin">
+</div>
+
+<div class="viewMain" style="margin-top: 120px">
+    <p>
+        Search:
+        <input type="text" ng-model="filterOptions.filterText" class="form-control" style="width: 200px; display: inline">
+        <div style="height: 400px;" class="gridStyle gridWidth" ng-grid="gridOptions"></div>
+    </p>
+
+    <!--<p>Customers: {{customers}}</p>-->
+    <p>
+        <button ng-click="showNewSettlement=true">Open New Trust Settlement</button>
+    </p>
+
+    <div ng-show="showNewSettlement">
+        <form class="form-horizontal">
+            <fieldset>
+                <!-- Form Name -->
+                <legend>New Trust Settlement</legend>
+
+                <div class="row">
+                    <div class="col-xs-3">
+                        <strong>Decedent/Conservatee/Minor Info:</strong>
+                    </div>
+                    <div class="col-xs-9">
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Last Name:</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control input-md" ng-model="filterOptions.filterText" ng-required="true">
+                                <span class="red">{{ duplicateText }}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">First Name:</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control input-md" ng-model="newSettlement.DecedentFirstName" ng-required="true">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Middle Name:</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control input-md" ng-model="newSettlement.DecedentMiddleName">
+                            </div>
+                        </div>
+
+                        <!-- Date input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Date of Death (if any):</label>
+                            <div class="col-md-4">
+                                <input ui-date="uiDateOptions" class="form-control input-md" ng-model="newSettlement._DateOfDeath">
+                                <!--                                <input type="text" datepicker-popup class="form-control input-md" ng-model="newSettlement._DateOfDeath" ng-required="true"/>-->
+                            </div>
+                        </div>
+
+                        <!-- Date input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">TS File Name:</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control input-md" ng-model="newSettlement.FileName" ng-required="true">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!--
+                <div>
+                    {{newSettlement}}
+                </div>
+-->
+
+                <!-- Button -->
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <button ng-click="createNewSettlement()" class="btn btn-primary">Create</button>
+                        <button ng-click="showNewSettlement=false" class="btn">Cancel</button>
+                    </div>
+                </div>
+            </fieldset>
+
+        </form>
+
+        <div style="height: 250px;" />
+
+    </div>
+</div>

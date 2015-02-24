@@ -1,0 +1,19 @@
+<p>This is the partial for view 1.</p>
+
+<!--<p>Customers: {{customers}}</p>-->
+
+<p>
+    Search:
+    <input type="search" ng-model="filterOptions.filterText" class="form-control" style="width: 200px; display: inline">
+    <p class="help-block">Type in any text to search for!</p>
+    <div class="gridStyle gridWidth" style="height: 400px; width: 700px;" ng-grid="gridOptions"></div>
+</p>
+
+Rows: {{gridOptions.$gridScope.totalFilteredItemsLength()}}
+
+<!--
+<p>
+    <div>
+        <button ng-click="generateDocument()">Generate Document!</button>
+    </div>
+</p>-->

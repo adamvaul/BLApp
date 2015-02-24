@@ -1,0 +1,15 @@
+<div class="viewTop">
+    <div>
+        <h2>Active Settlements Status</h2>
+    </div>
+    <div>
+        <button ng-click="saveClick()" class="btn btn-primary">Save</button>
+    </div>
+    <hr class="thin">
+</div>
+
+
+<div class="viewMain" style="margin-top: 150px;">
+    <h4>Status:</h4>
+    <div style="height: 500px;" ng-grid="statusGridOptions" class="gridWidth gridStyle"></div>
+</div>

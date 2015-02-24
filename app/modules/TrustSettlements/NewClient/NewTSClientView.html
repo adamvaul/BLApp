@@ -1,0 +1,92 @@
+<p>This is the partial for view 1.</p>
+
+<!--<p>Customers: {{customers}}</p>-->
+
+<p>
+    WT Clients
+    <div class="gridStyle" ng-grid="gridOptions"></div>
+</p>
+
+<p>
+
+    
+    <form class="form-horizontal">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>New Trust Settlement</legend>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="">Decedent Last Name</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md" ng-model="filterOptions.filterText" required="">
+                </div>
+            </div>
+
+            <!-- Multiple Radios (inline) -->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Gender</label>
+                <div class="col-md-4">
+                    <label class="radio-inline">
+                        <input type="radio" name="decedent_gender" value="male" checked="checked">Male
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="decedent_gender" value="female">Female
+                    </label>
+                </div>
+            </div>
+
+            <!-- Select Basic -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="">Salutation</label>
+                <div class="col-md-4">
+                    <select class="form-control">
+                        <option value="mr">Mr.</option>
+                        <option value="ms">Ms.</option>
+                        <option value="mrs">Mrs.</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="">Decedent First Name</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md">
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="">Decedent Middle Name</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control input-md">
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="">Date Of Death</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control input-md" ng-model="filterOptions.filterText">
+                </div>
+            </div>
+
+            <!-- Button -->
+            <div class="form-group">
+                <div class="col-md-4">
+                    <button class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </fieldset>
+
+    </form>
+</p>
+
+<p>
+    <div>
+        <button ng-click="generateDocument()">Generate Document!</button>
+    </div>
+</p>

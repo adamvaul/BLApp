@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="myApp" class="no-js">
+<!--<![endif]-->
+
+<head>
+    <link rel="icon" type="image/png" href="/img/favicon.ico" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BL Application</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="css/ng-grid.css" />
+    <link rel="stylesheet" href="css/app.css" />
+</head>
+
+<body ng-controller="AppController">
+
+    <div class="container">
+        Test Page
+
+        <button ng-click="confirm()">Confirm</button>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.6.0.js" type="text/javascript"></script>
+    <script src="http://m-e-conroy.github.io/angular-dialog-service/javascripts/dialogs.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var app = angular.module('myApp', ['dialogs']);
+         //Create a controller
+        app.controller('AppController', ['$scope', '$rootScope', '$dialogs',
+            function ($scope, $rootScope, $dialogs) {
+                var self = this;
+                $scope.confirm = function () {
+                    console.log('here');
+                    dlg = $dialogs.confirm('Please Confirm', 'Is this awesome or what?');
+                    dlg.result.then(function (btn) {
+                        $scope.confirmed = 'You thought this quite awesome!';
+                    }, function (btn) {
+                        $scope.confirmed = 'Shame on you for not thinking this is awesome!';
+                    });
+                };
+        }]);
+    </script>
+</body>
+
+</html>

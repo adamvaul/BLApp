@@ -1,0 +1,70 @@
+<div class="viewTop">
+    <div>
+        <h2>Documents</h2>
+    </div>
+    <div class="fileHeader">
+        <table>
+            <tr>
+                <td><span><strong>Dec.:</strong> {{ getDecedentFullName(Settlement) }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td><span><strong>DOD:</strong> {{ Settlement.DateOfDeath | date }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td><span><strong>File:</strong> {{ Settlement.FileName }}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <select class="form-control" style="display: inline-block; width: 350px; margin-top: -3px;" ng-change="settlementChanged()" ng-model="Settlement" ng-options="s.FileDescription for s in Settlements">
+            <option style="display:none" value="">{{settlementEmptyOption}}</option>
+        </select>
+    </div>
+<!--
+    <div>
+        <table>
+            <tr>
+                <td><span><strong>Dec.:</strong> {{ getDecedentFullName(Settlement) }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td><span><strong>DOD:</strong> {{ Settlement.DateOfDeath | date }}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+-->
+    <hr class="thin">
+    <div ng-show="hasSettlement">
+        <div class="myRow">
+            <div style="width: 80px">
+                <input type="checkbox" ng-click="selectAllForms()" ng-model="allFormsSelected" /> Select All
+            </div>
+            <div style="width: 180px">
+                <button ng-click="getSelectedFormsClick()" style="width: 150px;">Get All Selected</button>
+            </div>
+        </div>
+        <hr class="thin">
+    </div>
+</div>
+
+
+<div class="viewMain" style="margin-top: 160px">
+    <div ng-show="hasSettlement">
+        <div ng-repeat="form in Forms">
+            <div class="myRow" style="margin-bottom: 1px;">
+                <div style="width: 20px">
+                    <input type="checkbox" ng-click="formSelected()" ng-model="form._isSelected" />
+                </div>
+                <div>
+                    <div class="link" ng-click="getFormClick(form)">{{form.FormFileName}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

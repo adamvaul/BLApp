@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Map Dive</title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="description" content="Check out Map Dive: A Maps experiment made with Chrome by INSTRUMENT" />
+
+	<meta property="og:title" content="Map Dive" />
+	<meta property="og:url" content="http://mapdive.weareinstrument.com" />
+	<meta property="og:description" content="Check out Map Dive: A Maps experiment made with Chrome by INSTRUMENT" />
+	<meta property="og:image" content="http://mapdive.weareinstrument.com/images/mapdive.jpg"/>
+
+	<link rel="icon" type="image/png" href="favicon.png" />
+
+	<script>
+		var ua = navigator.userAgent.toLowerCase();
+		if (!window.WebGLRenderingContext
+				|| ua.match(/(ipad|iphone|ipod)/g)
+				|| ua.indexOf('android') !== -1
+				|| ua.indexOf('mobile') !== -1
+				|| (ua.indexOf('safari') !== -1 && ua.indexOf('chrome') === -1)) {
+			window.location = 'browser-support.html';
+	  }
+	</script>
+
+	<link rel="stylesheet" href="css/game.css">
+
+	<script type="x-shader/x-vertex" id="vertexShader">
+
+		varying vec3 vWorldPosition;
+
+		void main() {
+
+			vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+			vWorldPosition = worldPosition.xyz;
+
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		}
+
+	</script>
+
+	<script type="x-shader/x-fragment" id="fragmentShader">
+
+		uniform vec3 topColor;
+		uniform vec3 bottomColor;
+		uniform float offset;
+		uniform float exponent;
+
+		varying vec3 vWorldPosition;
+
+		void main() {
+
+			float h = max( 0.0, vWorldPosition.y / 5000.0);
+			gl_FragColor = vec4( mix( bottomColor, topColor, h), 1.0 );
+
+		}
+
+	</script>
+</head>
+
+<body>
+	<div id="init_log"></div>
+
+	<div id="debug"></div>
+
+	<div id="HUD">
+
+		<div id="hud-instructions" data-active="false"></div>
+
+		<div id="mini-map-container" class="hud-box hud-group" data-active="false">
+			<div id="mini-map"></div>
+			<div id="minimap-icon"></div>
+			<div class="mini-map-shadow"></div>
+		</div>
+
+		<div id="mapinfo-search" class="hud-box hud-group" data-active="false">
+			<div class="hud-row"><span id="mapinfo-search-term"></span></div>
+			<div id="search-icon"></div>
+		</div>
+
+		<div id="mapinfo-target" class="hud-box hud-group" data-active="false">
+			<div class="hud-row-first" id="mapinfo-target-name"></div>
+			<div class="hud-row-inner" id="mapinfo-target-address"></div>
+			<div class="hud-row-last" id="mapinfo-target-country"></div>
+			<div id="directions-icon"></div>
+		</div>
+
+		<div id="mapinfo-location" class="hud-box hud-group" data-active="false">
+			<div id="mapinfo-altitude">000,000 ft</div>
+			<div id="mapinfo-position" class="hud-row"><b>Dive</b>&nbsp;&nbsp;&nbsp;<span id="mapinfo-latlng"></span></div>
+		</div>
+
+		<div id="hud-viewport" data-active="false" class="hud-box">
+			<div id="hud-score" class="hud-group">
+
+				<div id="gate-container">
+			        <!-- gate counter -->
+			        <div id="gate-counter" class="big-counter counter clearfix">
+			          <ul>
+						<li class="thousands">
+			                  <div class="top"></div>
+			                  <div class="bottom"></div>
+			                  <div class="flip-top"></div>
+			                  <div class="flip-bottom"></div>
+			                  <div class="shim"></div>
+						</li><li class="hundreds">
+			                  <div class="top"></div>
+			                  <div class="bottom"></div>
+			                  <div class="flip-top"></div>
+			                  <div class="flip-bottom"></div>
+			                  <div class="shim"></div>
+			              </li><li class="tens">
+			                  <div class="top"></div>
+			                  <div class="bottom"></div>
+			                  <div class="flip-top"></div>
+			                  <div class="flip-bottom"></div>
+			                  <div class="shim"></div>
+						</li><li class="ones">
+			                  <div class="top"></div>
+			                  <div class="bottom"></div>
+			                  <div class="flip-top"></div>
+			                  <div class="flip-bottom"></div>
+			                  <div class="shim"></div>
+			              </li>
+			          </ul>
+			        </div>
+			        <!-- end gate counter -->
+			    </div>
+
+				<div id="star-container">
+					<!-- star counter -->
+			        <div id="star-counter" class="big-counter counter clearfix">
+			          <ul>
+			             <li class="thousands">
+			                  <div class="top"></div>
+			                  <div class="bottom"></div>
+			                  <div class="flip-top"></div>
+			                  <div class="flip-bottom"></div>
+			                  <div class="shim"></div>
+			              </li><li class="hundreds">
+			                  <div class="top"></div>
+			                  <div class="bottom"></div>
+			                  <div class="flip-top"></div>
+			                  <div class="flip-bottom"></div>
+			                  <div class="shim"></div>
+			              </li><li class="tens">
+			                  <div class="top"></div>
+			                  <div class="bottom"></div>
+			                  <div class="flip-top"></div>
+			                  <div class="flip-bottom"></div>
+			                  <div class="shim"></div>
+			              </li><li class="ones">
+			                  <div class="top"></div>
+			                  <div class="bottom"></div>
+			                  <div class="flip-top"></div>
+			                  <div class="flip-bottom"></div>
+			                  <div class="shim"></div>
+			              </li>
+			          </ul>
+			        </div>
+			        <!-- end star counter -->
+		       	</div>
+			</div>
+			<div id="finished" class="ui-screen">
+
+  <div class="score-card">
+
+    <div class="content">
+      <div class="score-message">
+        <span class="wing"></span>
+        <span class="wing"></span>
+        <span class="wing"></span>
+        <h1 id="hud-message"></h1>
+      </div>
+      <div class="score-share">
+        <p>Share with friends</p>
+        <a class="share-google" data-action="Dive" data-label="Google+" href="https://plus.google.com/share?url=http://mapdive.weareinstrument.com" target="_blank">Google+</a>
+        <a class="share-facebook" data-action="Dive" data-label="Facebook" href="https://www.facebook.com/sharer.php?u=http://mapdive.weareinstrument.com&t=You can skydive without leaving your couch! Check out Map Dive: A Maps experiment made with Chrome by INSTRUMENT" target="_blank">Facebook</a>
+        <a class="share-twitter" data-action="Dive" data-label="Twitter" href="http://twitter.com/intent/tweet?text=You can skydive without leaving your couch! Check out Map Dive: A Maps experiment made with Chrome by INSTRUMENT&url=http://mapdive.weareinstrument.com" target="_blank">Twitter</a>
+      </div>
+    </div>
+
+    <div class="nav">
+      <a id="btn-play-again" class="btn play-again" href="#">Play Again</a>
+      <a id="btn-restart-level" class="btn restart-level" href="#">Restart Level</a>
+      <a id="btn-select-level-status" class="btn select-level" href="#">Select Level</a>
+      <a id="btn-next-level" class="btn next-level" href="#">Next Level</a>
+      <a id="btn-resume" class="btn resume" href="#">Resume Game</a>
+      <a id="btn-quit" class="btn quit" href="#">Quit</a>
+    </div>
+
+  </div>
+
+</div>
+
+
+		</div>
+
+	<!-- END HUD CONTENT -->
+	</div>
+
+	<div id="css-viewport"></div>
+  <div id="webgl-viewport"></div>
+  <div id="map-container"></div>
+
+		<div id="technology" class="ui-screen">
+
+  <h1>Map Dive</h1>
+  <h2>Technology</h2>
+
+  <div class="tech-inner" data-bg="clouds.jpg">
+
+    <div class="content">
+      <div id="block-0" class="tech-block">
+        <p>
+          This version of Map Dive is built for the browser using keyboard and mouse controls, so you can earn your wings from the comfort of your home, office or wifi-enabled flight.
+        </p>
+        <p>
+          The original version was developed for the 2013 Google I/O conference. It was displayed on a Liquid Galaxy system (seven HD LED displays) and Pegman's moves were controlled by the user's movement via a 3D depth-sensing camera.
+        </p>
+      </div>
+      <div id="block-1" class="tech-block" data-bg="gates-1.png">
+        <h3>Google Maps API</h3>
+        <p>
+          All map data and tiles are pulled directly from the public Google Maps Javascript API and styled using map styles.
+        </p>
+      </div>
+      <div id="block-2" class="tech-block" data-bg="gates-2.png">
+        <h3>WebGL</h3>
+        <p>
+          We use Three.js to render 3D models and to allow Pegman to skydive as directed by a user’s mouse or keyboard.
+        </p>
+      </div>
+      <div id="block-3" class="tech-block" data-bg="gates-3.png">
+        <h3>CSS3</h3>
+        <p>
+          The map tiles received from the Google Maps API are rendered in a three-dimensional space using the CSS transform property to apply translate3d and matrix3d functions.
+        </p>
+      </div>
+      <div id="block-4" class="tech-block" data-bg="gates-4.png">
+        <h3>Web Audio</h3>
+        <p>
+          The audio sounds you hear after capturing a star or flying through a gate, as well as the ambient sound of the wind, are enabled by your browser’s native web audio support.
+        </p>
+      </div>
+      <div id="block-5" class="tech-block" data-bg="gates-5.png">
+        <h3>Node.js + Redis + Google+ API + LocalStorage</h3>
+        <p>
+          Your Map Dive achievements are saved for you using either the browser’s native LocalStorage support or your Google+ account. LocalStorage provides a login-free way of saving game state on a single machine. If a user wants to take their games to another machine or let multiple people access their own achievements from a single machine, the Google+ API provides a secure login that lets us save your game in a Redis key-value store running on Node.js.
+        </p>
+      </div>
+      <div id="block-6" class="tech-block" data-bg="gates-6.png">
+        <h3>Open Source</h3>
+        <p>
+          The Map Dive code is available on GitHub for anyone to learn from and build on. The <a href="https://github.com/Instrument/map-dive">multi-display installation version</a> uses WebSockets to sync seven instances of Chrome and includes motion-tracking control, and our <a href="https://github.com/Instrument/styled-maps-wizard">map style editor</a> enhances the Styled Maps Wizard to allow existing Maps styles to be imported and edited.
+        </p>
+      </div>
+    </div>
+
+    <img class="tech-map" data-src="map.jpg" />
+
+  </div>
+
+</div>
+
+
+  <div class="layer-ui">
+  	<div id="top-left">
+      <a id="btn-home" class="btn home" href="#">Home</a>
+    </div>
+    <div id="top-right">
+      <a id="btn-full-screen" class="btn full-screen" href="#">Full Screen</a>
+    </div>
+
+	  <div class="footer">
+	    <div id="bottom-left">
+	      <span class="experiment-tag">This is a Chrome Experiment</span>
+				<a href="https://www.google.com/maps/preview#!q=Instrument&data=!1m4!1m3!1d4186!2d-122.6556498!3d45.5254846!4m28!2m15!1m13!1s0x0%3A0x93d0a62f00b339bf!3m8!1m3!1d2093!2d-122.655631!3d45.5259168!3m2!1i1335!2i1150!4f13.1!4m2!3d45.5259176!4d-122.6557285!6s419+ne+10th+ave!5m11!1m10!1s419+ne+10th+ave!4m8!1m3!1d267791!2d-122.654422!3d45.5434085!3m2!1i1335!2i1150!4f13.1"><div id="mapinfo-logo" data-active="true"></div></a>
+	      <ul class="nav">
+	        <li><a class="btn-gplus" data-action="Page" data-label="Google+" href="https://plus.google.com/share?url=http://mapdive.weareinstrument.com" target="_blank">Google+</a></li>
+	        <li><a class="btn-facebook" data-action="Page" data-label="Facebook" href="https://www.facebook.com/sharer.php?u=http://mapdive.weareinstrument.com&t=Map Dive&summary=Map Dive: A Maps experiment made with Chrome by INSTRUMENT" target="_blank">Facebook</a></li>
+	        <li><a class="btn-twitter" data-action="Page" data-label="Twitter" href="http://twitter.com/intent/tweet?text=Check out Map Dive: A Maps experiment made with Chrome by INSTRUMENT&url=http://mapdive.weareinstrument.com" target="_blank">Twitter</a></li>
+	      </ul>
+	    </div>
+	    <div id="bottom-right">
+				<div id="mapinfo-copyright" class="" data-active="true">
+					<div id="map-info-copytext"></div>
+				</div>
+	      <a id="toggle-sound" class="toggle-sound" href="#">Sound <span class="sound-on">On</span><span class="sound-off">Off</span></a>
+	      <a id="link-technology" href="http://weareinstrument.com/blog/all/inside-map-dive">Technology</a>
+	      <a class="logo-instrument" href="http://weareinstrument.com">Instrument</a>
+	    </div>
+		</div>
+
+		<div id="attract" class="ui-screen">
+
+  <h1>Map Dive</h1>
+  <h2>A Maps experiment made with Chrome</h2>
+
+  <ul class="btns-wrapper nav" id="attract-buttons">
+    <li><a id="btn-play-game" class="btn text" href="#"><span>Play Game</span></a></li>
+    <li><a id="btn-select-level-attract" class="btn text" href="#"><span>Select Level</span></a></li>
+    <!-- <li><a id="btn-sign-in" class="btn text" href="#"><span>Sign In</span></a></li> -->
+    <li class="sign-in">
+			<p>Save your score</p>
+			<span id="signinButton">
+				<span
+					class="g-signin"
+					data-callback="signInCallback"
+					data-clientid="490196880676.apps.googleusercontent.com"
+					data-cookiepolicy="single_host_origin"
+					data-requestvisibleactions="http://schemas.google.com/AddActivity"
+					data-scope="https://www.googleapis.com/auth/plus.login">
+				</span>
+			</span>
+    </li>
+    <li class="log-out" id="user-display">
+    	<p class="user-signout"><a id="link-log-out" href="#">Sign Out</a></p>
+    </li>
+  </ul>
+
+</div>
+
+
+		<div id="credits" class="ui-screen">
+
+  <h1>Credits</h1>
+
+  <div class="content">
+    <div id="block-1">
+      <h3>Header</h3>
+      <p>Content</p>
+    </div>
+    <div id="block-2">
+      <h3>Header</h3>
+      <p>Content</p>
+    </div>
+    <div id="block-3">
+      <h3>Header</h3>
+      <p>Content</p>
+    </div>
+    <div id="block-4">
+      <h3>Header</h3>
+      <p>Content</p>
+    </div>
+  </div>
+
+</div>
+
+
+		<div id="instructions" class="ui-screen">
+	<div id="instructions-inner">
+		<h2>Use your keyboard or mouse to control Pegman during the dive<br> and hit the spacebar to pause the game.</h2>
+		<h2>Click anywhere to begin.</h2>
+		<div class="content"></div>
+	</div>
+</div>
+
+		<div id="search" class="ui-screen">
+
+	<div class="field search" id="search-box"><div class="text"></div></div>
+
+</div>
+
+		<div id="levels" class="ui-screen">
+
+  <div class="levels-wrapper">
+
+    <h2>Navigate Pegman to a monument to unlock the next level.</h2>
+    <h2>Hit the gates, stars and bonus objects to earn your wings.</h2>
+
+    <div class="levels-container">
+
+      <a id="card_statue_of_liberty" class="level-card" href="#" data-level="statue of liberty">
+        <div class="level-inner">
+          <span class="level-number">Level 01</span>
+          <img src="images/icons/statue.png" alt="" />
+          <div class="level-lock"></div>
+          <div class="level-details">
+            <h3>Statue of Liberty</h3>
+            <span>Liberty Island, New York, NY</span>
+            <span>United States</span>
+            <span>40.689&deg;N, 74.045&deg;W</span>
+          </div>
+        </div>
+      </a>
+
+      <a id="card_st_basils" class="level-card locked" href="#" data-level="st_basils">
+        <div class="level-inner">
+          <span class="level-number">Level 02</span>
+          <img src="images/icons/st_basils_cathedral.png" alt="" />
+          <div class="level-lock"></div>
+          <div class="level-details">
+            <h3>St. Basil's Cathedral</h3>
+            <span>ploshchad' Krasnaya, Moscow</span>
+            <span>Russia</span>
+            <span>55.753&deg;N, 37.623&deg;E</span>
+          </div>
+        </div>
+      </a>
+
+      <a id="card_burj_al_arab" class="level-card locked" href="#" data-level="burj al arab">
+        <div class="level-inner">
+          <span class="level-number">Level 03</span>
+          <img src="images/icons/burj_al_arab.png" alt="" />
+          <div class="level-lock"></div>
+          <div class="level-details">
+            <h3>Burj Al Arab Hotel</h3>
+            <span>Burj Al Arab Hotel &#8211; Dubai</span>
+            <span>United Arab Emirates</span>
+            <span>25.140&deg;N, 55.187&deg;E</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+  </div>
+
+	<div id="loading" class="ui-screen">
+	<div id="preloader">
+		<canvas id="loading-animation"></canvas>
+		<img src="images/loader.png">
+	</div>
+</div>
+
+
+
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39587789-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+
+	
+
+	
+	<script>
+		SERVER_PREFIX = "http://server.mapdive.weareinstrument.com/";
+	</script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.8&sensor=false"></script>
+	<script src="js/temp.js"></script>
+    
+
+
+  <script type="text/javascript">
+		(function() {
+			var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+			po.src = 'https://apis.google.com/js/client:plusone.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+   </script>
+
+</body>
+
+</html>

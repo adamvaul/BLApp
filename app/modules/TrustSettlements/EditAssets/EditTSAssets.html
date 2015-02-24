@@ -1,0 +1,260 @@
+<div class="viewTop">
+    <div>
+        <h2>Assets</h2>
+    </div>
+    <div class="fileHeader">
+        <table>
+            <tr>
+                <td><span><strong>Dec.:</strong> {{ getDecedentFullName(Settlement) }}</span>
+                </td>
+                <td>&nbsp;</td>
+                <td><span><strong>Total Estate:</strong> {{assetsInfo.totalEstate | currency}} (Trust A: {{assetsInfo.trustATotal | currency}}, <span ng-show="Settlement.TrustTypeID > 2">Trust B: {{assetsInfo.trustBTotal | currency}}, </span><span ng-show="Settlement.TrustTypeID == 4">Trust C: {{assetsInfo.trustCTotal | currency}}, </span>Other: {{assetsInfo.otherTotal | currency}})</span>
+                </td>
+            </tr>
+            <tr>
+                <td><span><strong>DOD:</strong> {{ Settlement.DateOfDeath | date }}</span>
+                </td>
+                <td>&nbsp;</td>
+                <td><span><strong>Estm. Value:</strong> {{assetsInfo.estimatedValue | currency}} (Trust A: {{assetsInfo.estimatedTrustATotal | currency}}, <span ng-show="Settlement.TrustTypeID > 2">Trust B: {{assetsInfo.estimatedTrustBTotal | currency}}, </span><span ng-show="Settlement.TrustTypeID == 4">Trust C: {{assetsInfo.estimatedTrustCTotal | currency}}, </span>Other: {{assetsInfo.estimatedOtherTotal | currency}})</span>
+                </td>
+            </tr>
+            <tr>
+                <td><span><strong>File:</strong> {{ Settlement.FileName }}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <select class="form-control" style="display: inline-block; width: 350px; margin-top: -3px;" ng-change="settlementChanged()" ng-model="Settlement" ng-options="s.FileDescription for s in Settlements">
+            <option style="display:none" value="">{{settlementEmptyOption}}</option>
+        </select>
+    </div>
+    <div>
+        <button ng-click="saveSettlementClick()" class="btn btn-primary">Save</button>
+    </div>
+    <hr class="thin">
+</div>
+
+<div class="viewMain" ng-show="hasSettlement">
+    <form class="form-horizontal">
+        <fieldset>
+            <!-- Form Name -->
+            <!--<legend>Edit Trust Settlement Assets</legend>-->
+
+            <!--
+            <div class="form-group">
+                <label>TS Number:</label>
+                <span>{{settlement.FileName}}</span>
+            </div>-->
+
+            <h4>Personal Property:
+                <input angular-currency-input type="text" class="form-control input-md" ng-model="Settlement.PersonalPropertyDODValue" style="width: 250px; display:inline;"></input>
+            </h4>
+
+            <!--                    {{Settlement}}-->
+
+            <hr>
+            <h4>Vehicles: <i ng-click="addVehicle()" title="Add Vehicle" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-show="Vehicles.length > 0">
+                <div style="height: 150px;" ng-grid="vehicleGridOptions" class="gridWidth gridStyle"></div>
+                <!--
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <button ng-click="saveSettlementClick()" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+-->
+            </div>
+
+            <hr>
+            <h4>Real Properties: <i ng-click="addProperty()" title="Add Property" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-show="Properties.length > 0">
+                <div style="height: 150px;" ng-grid="propertyGridOptions" class="gridWidth gridStyle"></div>
+                <!--
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <button ng-click="saveSettlementClick()" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+-->
+            </div>
+
+            <hr>
+            <h4>Mortgages: <i ng-click="addMortgage()" title="Add Mortgage" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-show="Mortgages.length > 0">
+                <div style="height: 120px;" ng-grid="mortgageGridOptions" class="gridWidth gridStyle"></div>
+                <!--
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <button ng-click="saveSettlementClick()" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+-->
+            </div>
+
+
+            <hr>
+            <h4>Banks: <i ng-click="addBank()" title="Add Bank" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-show="Banks.length > 0">
+                <div ng-grid="bankGridOptions" class="gridWidth gridStyle" style="height: 250px;"></div>
+                <!--
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <button ng-click="saveSettlementClick()" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+-->
+            </div>
+
+            <div class="tab" ng-show="showBankAccounts">
+                <h4 style="margin-bottom: 10px;">Bank Accounts:</h4>
+                <div ng-repeat="b in Banks" ng-show="b._showAccounts">
+                    <div style="margin-left: 0px">
+                        <label>
+                            {{b.ShortName}}<i style="margin-left: 5px;" ng-click="addBankAccount(b)" title="Add Account" class="link glyphicon glyphicon-plus"></i>
+                        </label>
+                    </div>
+                    <div ng-show="b._Accounts.length > 0">
+                        <div ng-grid="{{'bankAccountGridOptions[' + $index + ']'}}" class="gridWidth gridStyle" style="height: 124px;"></div>
+
+                        <!--                        <div ng-grid="{data: 'b._Accounts', enableCellSelection: true, enableRowSelection: false, enableCellEditOnFocus: true, columnDefs: 'bankAccountGridColumnDefs', plugins: [new ngGridFlexibleHeightPlugin()] }" class="gridWidth gridStyle" style="height: 124px;"></div>-->
+                        <!--                        <div ng-grid="bankAccountGridOptions" class="gridWidth gridStyle" style="height: 124px;"></div>-->
+                        <!--                    <div ng-grid="{data:'b._Accounts', columnDefs: 'bankAccountGridColumns',enableCellSelection: true, enableRowSelection: false, enableCellEditOnFocus: true}" class="gridWidth gridStyle" style="height: 150px;"></div>-->
+                    </div>
+                </div>
+            </div>
+
+
+            <hr>
+            <h4>Stockbrokers: <i ng-click="addBroker()" title="Add Broker" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-show="Brokers.length > 0">
+                <div ng-grid="brokerGridOptions" class="gridWidth gridStyle"></div>
+            </div>
+
+            <div class="tab" ng-show="showBrokerAccounts">
+                <h4 style="margin-bottom: 10px;">Stockbroker Accounts:</h4>
+                <div ng-repeat="b in Brokers" ng-show="b._showAccounts">
+                    <div>
+                        <label>
+                            {{b.ShortName}}<i style="margin-left: 5px;" ng-click="addBrokerAccount(b)" title="Add Account" class="link glyphicon glyphicon-plus"></i>
+                        </label>
+                    </div>
+                    <div ng-show="b._Accounts.length > 0">
+                        <div ng-grid="{{'brokerAccountGridOptions[' + $index + ']'}}" class="gridWidth gridStyle" style="height: 124px;"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <hr>
+            <h4>Stocks: <i ng-click="addStock()" title="Add Stock" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-show="Stocks.length > 0">
+                <div ng-grid="stockGridOptions" class="gridWidth gridStyle"></div>
+            </div>
+
+            <div class="tab" ng-show="showStockAccounts">
+                <h4 style="margin-bottom: 10px;">Stock Accounts:</h4>
+                <div ng-repeat="b in Stocks" ng-show="b._showAccounts">
+                    <div>
+                        <label>
+                            {{b.ShortName}}<i style="margin-left: 5px;" ng-click="addStockAccount(b)" title="Add Account" class="link glyphicon glyphicon-plus"></i>
+                        </label>
+                    </div>
+                    <div ng-show="b._Accounts.length > 0">
+                        <div ng-grid="{{'stockAccountGridOptions[' + $index + ']'}}" class="gridWidth gridStyle" style="height: 124px;"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <hr>
+            <h4>US Savings Bonds: <i ng-click="addUSBond()" title="Add USBond" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-show="USBonds.length > 0">
+                <div ng-grid="USBondsGridOptions" class="gridWidth gridStyle"></div>
+            </div>
+
+
+            <hr>
+            <h4>Life Insurance: <i ng-click="addLifeInsurance()" title="Add Life Insurance" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-show="LifeInsurance.length > 0">
+                <div ng-grid="LifeInsuranceGridOptions" class="gridWidth gridStyle"></div>
+            </div>
+            <div class="tab" ng-show="showLifeInsuranceAccounts">
+                <h4 style="margin-bottom: 10px;">Life Insurance Policies:</h4>
+                <div ng-repeat="b in LifeInsurance" ng-show="b._showAccounts">
+                    <div>
+                        <label>
+                            {{b.ShortName}}<i style="margin-left: 5px;" ng-click="addLifeInsuranceAccount(b)" title="Add Account" class="link glyphicon glyphicon-plus"></i>
+                        </label>
+                    </div>
+                    <div ng-show="b._Accounts.length > 0">
+                        <div ng-grid="{{'LifeInsuranceAccountGridOptions[' + $index + ']'}}" class="gridWidth gridStyle" style="height: 124px;"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <hr>
+            <h4>IRA: <i ng-click="addIRA()" title="Add IRA" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-show="IRA.length > 0">
+                <div ng-grid="IRAGridOptions" class="gridWidth gridStyle"></div>
+            </div>
+            <div class="tab" ng-show="showIRAAccounts">
+                <h4 style="margin-bottom: 10px;">IRA Accounts:</h4>
+                <div ng-repeat="b in IRA" ng-show="b._showAccounts">
+                    <div>
+                        <label>
+                            {{b.ShortName}}<i style="margin-left: 5px;" ng-click="addIRAAccount(b)" title="Add Account" class="link glyphicon glyphicon-plus"></i>
+                        </label>
+                    </div>
+                    <div ng-show="b._Accounts.length > 0">
+                        <div ng-grid="{{'IRAAccountGridOptions[' + $index + ']'}}" class="gridWidth gridStyle" style="height: 124px;"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <hr>
+            <h4>Annuity: <i ng-click="addAnnuity()" title="Add Annuity" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-show="Annuity.length > 0">
+                <div ng-grid="AnnuityGridOptions" class="gridWidth gridStyle"></div>
+            </div>
+            <div class="tab" ng-show="showAnnuityAccounts">
+                <h4 style="margin-bottom: 10px;">Annuity Accounts:</h4>
+                <div ng-repeat="b in Annuity" ng-show="b._showAccounts">
+                    <div>
+                        <label>
+                            {{b.ShortName}}<i style="margin-left: 5px;" ng-click="addAnnuityAccount(b)" title="Add Account" class="link glyphicon glyphicon-plus"></i>
+                        </label>
+                    </div>
+                    <div ng-show="b._Accounts.length > 0">
+                        <div ng-grid="{{'AnnuityAccountGridOptions[' + $index + ']'}}" class="gridWidth gridStyle" style="height: 124px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <h4>Miscelaneous Assets: <i ng-click="addMiscAsset()" title="Add Miscelaneous Asset" class="link glyphicon glyphicon-plus"></i></h4>
+            <div ng-show="MiscAsset.length > 0">
+                <div ng-grid="MiscAssetGridOptions" class="gridWidth gridStyle"></div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Inventory Notes:</label>
+                <div class="col-md-4">
+                    <textarea class="form-control input-md" ng-model="Settlement.InventoryNotes"></textarea>
+                </div>
+            </div>
+
+            <div>
+                <button ng-click="getInventory()" class="btn btn-primary">Get Inventory</button>
+            </div>
+
+
+        </fieldset>
+    </form>
+</div>
+
